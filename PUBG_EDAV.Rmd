@@ -1,0 +1,45 @@
+---
+title: "PUBD EDAV, ALLUVIAL DIAGRAM SECTION"
+output:
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+rm(list = ls())
+
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+library(ggplot2)
+library(stringr)
+library(dplyr)
+library(tidyr)
+library(tidyverse)
+library(readr)
+library(ggalluvial)
+```
+
+```{r}
+kill_first = read_csv('kill_first.csv')
+order = c('AKM', 'Groza', 'DP-28', 'SKS', 'Mk14', 'Kar98k', 'M24',
+          'Micro UZI', 'UMP9', 'VSS',
+          'SCAR-L', 'M16A4', 'M416', 'AUG', 'M249', 'Mini 14',
+          'Vector',
+          'Tommy Gun',
+          'AWM',
+          'S1897', 'S686', 'S12K',
+          'P1911', 'P92', 'P18C', 'R1895',
+          'Crossbow', 'Falling',
+          'Punch', 'Pan', 'Sickle', 'Machete', 'Crowbar',
+          'Grenade', 'death.ProjMolotov_C', 'death.ProjMolotov_DamageField_C', 'death.Buff_FireDOT_C',
+          'Hit by Car', 'Uaz', 'Buggy', 'Dacia', 'Motorbike', 'Motorbike (SideCar)', 'Boat', 'Aquarail')
+kill_first$killed_by = factor(kill_first$killed_by, levels = order)
+```
+
+```{r, fig.width=10, fig.height=8}
+ggplot(kill_first, aes(alluvium = match_id, x = total_kill, 
+                       stratum = killed_by)) +
+  geom_alluvium(alpha = 0.8) +
+  geom_stratum(aes(fill = killed_by)) +
+  scale_x_continuous(breaks = c(1:10))
+```
+
+
