@@ -7,3 +7,13 @@ site: bookdown::bookdown_site
 
 # Introduction
 
+## Background
+For this project, We've decided to do something different: I am an avid lovers of video games and are especially passionate about the game PlayerUnknown’s Battleground, so I decide to analyze data from that game.
+
+![Graph from https://www.theverge.com/2021/3/31/22360204/pubg-lite-shutdown-free-to-play](pubg_pic1.png){#id .class width=50% height=50%}
+
+## Game Intro
+➔ PlayerUnknown’s Battleground, or PUBG in the following, is a first/third-person shooter battle royale style game that pits 100 players on a large island where players or teams fight to the last one remains.<br>
+➔ Players are airdropped onto the island where they can scavenge buildings to collect weapons, ammo, armor, first-aid, and other resources.<br>
+➔ Players strategize their game plan by either fighting or hiding until they become the last person or team surviving.<br>
+➔ A blue zone will appear randomly later into the game and players must remain outside the blue zone to avoid extra damage from the zone. The blue zone will zoom in every few minutes to corral players closer and closer together and the damage of staying in the blue zone will increase more and more.

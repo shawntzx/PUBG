@@ -1,1 +1,60 @@
 # Results
+
+```{r}
+library(cowplot)
+library(magick)
+library(jpeg)
+library(grid)
+```
+
+```{r}
+kill_1_erang = kill_stat %>%
+  filter(match_id %in% agg_stat$match_id) %>%
+  arrange(match_id, time)
+```
+
+
+```{r}
+#TODO: scatter plot of total dead
+```
+
+```{r}
+kill_1_erang = kill_1_erang %>%
+  filter(killer_position_x >= 0 & killer_position_x <= 800000 & 
+           killer_position_y >= 0 & killer_position_y <= 800000 &
+           victim_position_x >= 0 & victim_position_x <= 800000 &
+           victim_position_y >= 0 & victim_position_y <= 800000)
+kill_1_erang$killer_position_x = kill_1_erang$killer_position_x*4096/800000
+kill_1_erang$killer_position_y = kill_1_erang$killer_position_y*4096/800000
+kill_1_erang$victim_position_x = kill_1_erang$victim_position_x*4096/800000
+kill_1_erang$victim_position_y = kill_1_erang$victim_position_y*4096/800000
+
+data_scaled = kill_1_erang %>% 
+  select(c(killer_position_x, killer_position_y)) %>%
+  drop_na(killer_position_x) %>% drop_na(killer_position_y)
+```
+
+```{r}
+img <- readJPEG("erangel.jpg")
+ggplot(data_scaled, aes(x=killer_position_x, y=killer_position_y)) +
+  annotation_custom(rasterGrob(img, width=unit(1,"npc"), 
+                height=unit(1,"npc"), interpolate = FALSE)
+                , -Inf, Inf, -Inf, Inf) +
+  geom_bin2d(alpha = 0.9, bins=100) +
+  scale_x_continuous(expand=c(0,0))+
+  scale_y_continuous(expand=c(0,0))+
+  theme(axis.title=element_blank(),
+        legend.position = "none")
+```
+
+```{r}
+#TODO: kill by method
+```
+
+```{r}
+#TODO: kill by method by different time frame
+```
+
+```{r}
+#TODO: k/d analysis
+```
