@@ -1,1 +1,29 @@
 # Data transformation
+
+```{r}
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(patchwork)
+```
+
+There is not much cleaning required for the dataset. We kept only the rows and columns we need in order to shrink down the size of the dataset.
+```{r}
+kill_stat = read.csv('kill_match_stats_final_4.csv')
+kill_stat = kill_stat %>% 
+  filter(map == 'ERANGEL') %>%
+  select(c('match_id', 'time', 'killed_by', 'killer_placement', 'killer_name', 
+           'killer_position_x', 'killer_position_y', 'victim_position_x', 'victim_position_y'))
+
+knitr::kable(head(kill_stat))
+```
+
+```{r}
+agg_stat = read.csv('agg_match_stats_4.csv')
+agg_stat = agg_stat %>% 
+  filter(party_size == 1) %>%
+  select(c('match_id', 'player_survive_time', 'player_kills',
+           'player_dist_ride', 'player_dist_walk', 'team_placement'))
+
+knitr::kable(head(agg_stat))
+```
