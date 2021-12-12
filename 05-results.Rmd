@@ -5,6 +5,8 @@ library(cowplot)
 library(magick)
 library(jpeg)
 library(grid)
+library(ggplot2)
+library(forcats)
 ```
 
 ```{r}
@@ -16,6 +18,13 @@ kill_1_erang = kill_stat %>%
 
 ```{r}
 #TODO: scatter plot of total dead
+kill<- kill_1_erang
+dead<-kill%>%group_by(match_id)%>%arrange(time)%>%mutate(num = row_number())
+dead1<-dead%>%group_by(num)%>%summarise(avg_time=mean(time))
+ggplot(dead1,aes(x=avg_time,y=num))+geom_point()+
+  xlab('Average time')+ylab('Death number') + ggtitle("Scatter plot of mean time to reach total dead")
+ggplot(dead1,aes(x=log(avg_time),y=num))+geom_point()+
+  xlab('log(Average time)')+ylab('Death number') + ggtitle("Scatter plot of log mean time to reach total dead")
 ```
 
 ```{r}
@@ -49,12 +58,27 @@ ggplot(data_scaled, aes(x=killer_position_x, y=killer_position_y)) +
 
 ```{r}
 #TODO: kill by method
+kill_by<-kill%>%group_by(killed_by)%>%summarize(num=n())%>%ungroup()
+kill_by_above25000<-kill_by%>%filter(num>=25000)
+ggplot(kill_by_above25000,aes(x=num,y=fct_reorder(killed_by,num)))+geom_point()+
+  xlab('number')+ylab('method') + ggtitle("Cleveland dot plot of kill by method(count>=25000)")
+kill_by_below25000<-kill_by%>%filter(num<25000)
+ggplot(kill_by_below25000,aes(x=num,y=fct_reorder(killed_by,num)))+geom_point()+
+  xlab('number')+ylab('method') + ggtitle("Cleveland dot plot of kill by method(count<25000)")
 ```
 
 ```{r}
 #TODO: kill by method by different time frame
+
 ```
 
 ```{r}
 #TODO: k/d analysis
+kd <- agg_stat%>%mutate(ratio = player_kills/(player_dist_ride+player_dist_walk))
+kd.5b <- kd%>%filter(ratio<0.5)  
+kd.5u <- kd%>%filter(ratio>0.5 & ratio<100)
+ggplot(kd.5b,aes(x=ratio,y=team_placement))+geom_point()+
+  xlab('Kill ratio')+ylab('Team placement') + ggtitle("Scatter plot of team placement vs kill ratio")
+ggplot(kd.5u,aes(x=ratio,y=team_placement))+geom_point()+
+  xlab('Kill ratio')+ylab('Team placement') + ggtitle("Scatter plot of team placement vs kill ratio")
 ```
