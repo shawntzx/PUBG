@@ -75,7 +75,7 @@ ggplot(kill_by_below25000,aes(x=num,y=fct_reorder(killed_by,num)))+geom_point()+
 ```{r}
 #TODO: k/d analysis
 kd <- agg_stat%>%mutate(ratio = player_kills/(player_dist_ride+player_dist_walk))
-kd <- kd%>%filter(ratio<5)
-ggplot(kd.5b,aes(x=ratio,y=team_placement))+geom_point(size=1, alpha = 0.3)+
+kd <- kd%>%filter(ratio<3)
+ggplot(kd,aes(x=ratio,y=team_placement))+geom_point(size=1, alpha = 0.3)+
   xlab('Kill ratio')+ylab('Team placement') + ggtitle("Scatter plot of team placement vs kill ratio")
 ```
