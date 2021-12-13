@@ -121,7 +121,7 @@
 <div id="dead-vs.-time" class="section level2">
 <h2><span class="header-section-number">5.1</span> Dead vs. Time</h2>
 <p>First we take a look at the relationship between average time and total players dead in each game.</p>
-<p><img src="finalproj_files/figure-html/unnamed-chunk-14-1.png" width="576" /><img src="finalproj_files/figure-html/unnamed-chunk-14-2.png" width="576" /></p>
+<p><img src="finalproj_files/figure-html/unnamed-chunk-15-1.png" width="576" /><img src="finalproj_files/figure-html/unnamed-chunk-15-2.png" width="576" /></p>
 <p>Clearly, there are more people dying at the beginning of the game, and as the game proceed, the amount of people dying slows down.<br>
 After transforming the x axis to a log frame, it’s clear to see the the total players dead vs average time follows roughly a logarithmic relationship.</p>
 </div>
@@ -129,7 +129,7 @@ After transforming the x axis to a log frame, it’s clear to see the the total 
 <h2><span class="header-section-number">5.2</span> Kill by method</h2>
 <p>Now we move on to the popular weapon or kill method of the games.<br>
 To analyze that, we create a cleveland dot plot of players killed by each method.</p>
-<p><img src="finalproj_files/figure-html/unnamed-chunk-15-1.png" width="768" /><img src="finalproj_files/figure-html/unnamed-chunk-15-2.png" width="768" /></p>
+<p><img src="finalproj_files/figure-html/unnamed-chunk-16-1.png" width="768" /><img src="finalproj_files/figure-html/unnamed-chunk-16-2.png" width="768" /></p>
 <p>From the graph we can see that M416 is the dominate weapon of the game.<br>
 Moreover, weapons from the 5.56mm ammo family (M416, M16A4, SCAR-L etc), are in general much more popular than weapons from the other ammo family.<br>
 Assault Rifles, such as M416, M16A4, and SCAR-L from the 5.56mm ammo family, and AKM from the 7.62mm ammo family, are much more popular than other weapons kinds, such as Sniper Rifles (Kar 98k, M24 etc) or Designated Marksman Rifles (Mini 14, SKS etc).<br>
@@ -140,7 +140,7 @@ We will move on to show kill by method based on specific time range in the inter
 <h2><span class="header-section-number">5.3</span> Winner weapon analysis</h2>
 <p>We now will analyze the winning player of each game and their choice of weapon.<br>
 For this analysis we will look at the winning player of each game and the weapon they used for the last 10 kills that they achieved in each game, if exist. Then we will create an ALLUVIAL DIAGRAM to track the movement of weapons of these last 10 kills.</p>
-<p><img src="finalproj_files/figure-html/unnamed-chunk-17-1.png" width="1152" /></p>
+<p><img src="finalproj_files/figure-html/unnamed-chunk-18-1.png" width="1152" /></p>
 <p>From the diagram, the first thing we can tell is that in reality, most winning players are not high-kill players, as we can see a gradual decrease of the amount of total kills of each player.<br>
 We can see that 5.56mm ammo weapons are again favored by most winning players.<br>
 Many transactions among weapons happened between switching a non-ammo weapon to ammo weapon, or an assault rifle to sniper rifle.</p>
@@ -148,7 +148,7 @@ Many transactions among weapons happened between switching a non-ammo weapon to 
 <div id="killer-positiomn-heatmap" class="section level2">
 <h2><span class="header-section-number">5.4</span> Killer positiomn heatmap</h2>
 <p>Now we move on to analyze the popular places where most fights take place. To do that we will create a heatmap of the killer position of each game using a 2D density plot.</p>
-<p><img src="finalproj_files/figure-html/unnamed-chunk-19-1.png" width="576" /></p>
+<p><img src="finalproj_files/figure-html/unnamed-chunk-20-1.png" width="576" /></p>
 <p>From the heat map we can clearly see that the most popular locations for fights are Pochinki, Mylta, Sosnovka Military Base and their surrounding areas.<br>
 A good advice for beginner is to avoid these areas and choose places that were less popular in fighting.</p>
 </div>
@@ -157,10 +157,10 @@ A good advice for beginner is to avoid these areas and choose places that were l
 <p>Moving forward, we will analyze the performance of players.<br>
 For that, I will introduce a concept called K/D, which is short for Kill-Death ratio. K/D is the total amount of people a player killed divided by the total amount of times a player got killed.<br>
 Typically, the higher the K/D is, the better the player is at the game.</p>
-<p><img src="finalproj_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<p><img src="finalproj_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
 <p>From the histogram of K/D value, we can see that the distribution of K/Ds is extremely skewed to the right.<br>
 To gain more insight, we split the data set based on high-low K/D values.</p>
-<p><img src="finalproj_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
+<p><img src="finalproj_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
 <p>I split the data set based on low K/D value (K/D &lt;= 3.0) and high K/D value (if K/D &gt; 3.0).<br>
 From the graph, we can see that in reality, most of the K/Ds ranged from 0.5 to 1.5.<br>
 In reality, is extremely rare to kill more that 3 people per death on average.</p>
@@ -174,7 +174,7 @@ Note:<br>
 For each path, circle dots denote kill position of that player at each game, the triangle indicates the end point of this player, either they were killed or won the game at the spot.</p>
 <div id="top-player-analysis" class="section level3">
 <h3><span class="header-section-number">5.6.1</span> Top player analysis</h3>
-<p><img src="finalproj_files/figure-html/unnamed-chunk-25-1.png" width="672" /><img src="finalproj_files/figure-html/unnamed-chunk-25-2.png" width="672" /><img src="finalproj_files/figure-html/unnamed-chunk-25-3.png" width="672" /></p>
+<p><img src="finalproj_files/figure-html/unnamed-chunk-26-1.png" width="672" /><img src="finalproj_files/figure-html/unnamed-chunk-26-2.png" width="672" /><img src="finalproj_files/figure-html/unnamed-chunk-26-3.png" width="672" /></p>
 <p>➔ Some interesting behavior of the first top player KenTBK include that they have a few preferred drop spots, including Pochinki area south-west part of Erangel and eastern Erangel. They don’t travel a lot, but are usually able to maintain a high kill within the spot that they are staying.<br>
 ➔ On the other hand, the second top player Azarath_Zinthos is much more of a heavy fighter, they usually only drop at Pochinki and are about to make their way out most of the times. They also travel much more than the previous player.<br>
 ➔ The third top player HuYa_Suancai also like to drop at Pochinki area, but they also sometime will drop at upper west Erangel or other locations. They also travel a lot within each game, and is the only player among all three who travel through water as well.<br><br>
@@ -182,7 +182,7 @@ In general, it seems like all of these top players have their preferred drop spo
 </div>
 <div id="lower-player-analysis" class="section level3">
 <h3><span class="header-section-number">5.6.2</span> Lower player analysis</h3>
-<p><img src="finalproj_files/figure-html/unnamed-chunk-26-1.png" width="672" /><img src="finalproj_files/figure-html/unnamed-chunk-26-2.png" width="672" /><img src="finalproj_files/figure-html/unnamed-chunk-26-3.png" width="672" /></p>
+<p><img src="finalproj_files/figure-html/unnamed-chunk-27-1.png" width="672" /><img src="finalproj_files/figure-html/unnamed-chunk-27-2.png" width="672" /><img src="finalproj_files/figure-html/unnamed-chunk-27-3.png" width="672" /></p>
 <p>The behavior of all of the three bottom players have one thing in common: they don’t have a preferred drop spot. They will land at random places and will be killed shortly after.<br><br>
 One good advice to give for beginner is that always have a preferred drop spot so that you are familiar with the set up of the spot, either a place with heavy fighting or not, from there you can gradually expand your location.</p>
 </div>
@@ -193,7 +193,7 @@ One good advice to give for beginner is that always have a preferred drop spot s
 To do that, we will introduce a new variable called the kill ratio.<br>
 Kill ratio is measured by the amount of people that a player killed for each game divided by the sum of player distance ride and player distance killed.<br>
 Since the bigger amount of player killed indicates heavier level of fighting and more distance of traveling means higher possibility of hiding, the bigger the kill ratio, the more fighting and less hiding of the player.</p>
-<p><img src="finalproj_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
+<p><img src="finalproj_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
 <p>From the graph of team placement vs kill ratio, it is clear that the there is a positive correlation between higher kill ratio and lower team placement.<br>
 Therefore, combined with the behavior analysis of top vs low K/D players, for regular users, to get a better rank, it is wiser to HIDE than FIGHT.</p>
 
