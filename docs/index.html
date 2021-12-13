@@ -24,7 +24,7 @@
 <meta name="author" content="Zixiang Tang &amp; Yuwen Zhang" />
 
 
-<meta name="date" content="2021-11-19" />
+<meta name="date" content="2021-12-13" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -73,11 +73,28 @@
 <li><a href="./">PUBG</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
-<li class="chapter" data-level="2" data-path="data-sources.html"><a href="data-sources.html"><i class="fa fa-check"></i><b>2</b> Data sources</a></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#background"><i class="fa fa-check"></i><b>1.1</b> Background</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#game-intro"><i class="fa fa-check"></i><b>1.2</b> Game Intro</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="data-sources.html"><a href="data-sources.html"><i class="fa fa-check"></i><b>2</b> Data sources</a><ul>
+<li class="chapter" data-level="2.1" data-path="data-sources.html"><a href="data-sources.html#kill-data-set"><i class="fa fa-check"></i><b>2.1</b> Kill data set</a></li>
+<li class="chapter" data-level="2.2" data-path="data-sources.html"><a href="data-sources.html#aggregated-match-data-set"><i class="fa fa-check"></i><b>2.2</b> Aggregated match data set</a></li>
+</ul></li>
 <li class="chapter" data-level="3" data-path="data-transformation.html"><a href="data-transformation.html"><i class="fa fa-check"></i><b>3</b> Data transformation</a></li>
 <li class="chapter" data-level="4" data-path="missing-values.html"><a href="missing-values.html"><i class="fa fa-check"></i><b>4</b> Missing values</a></li>
-<li class="chapter" data-level="5" data-path="results.html"><a href="results.html"><i class="fa fa-check"></i><b>5</b> Results</a></li>
+<li class="chapter" data-level="5" data-path="results.html"><a href="results.html"><i class="fa fa-check"></i><b>5</b> Results</a><ul>
+<li class="chapter" data-level="5.1" data-path="results.html"><a href="results.html#dead-vs.-time"><i class="fa fa-check"></i><b>5.1</b> Dead vs. Time</a></li>
+<li class="chapter" data-level="5.2" data-path="results.html"><a href="results.html#kill-by-method"><i class="fa fa-check"></i><b>5.2</b> Kill by method</a></li>
+<li class="chapter" data-level="5.3" data-path="results.html"><a href="results.html#winner-weapon-analysis"><i class="fa fa-check"></i><b>5.3</b> Winner weapon analysis</a></li>
+<li class="chapter" data-level="5.4" data-path="results.html"><a href="results.html#killer-positiomn-heatmap"><i class="fa fa-check"></i><b>5.4</b> Killer positiomn heatmap</a></li>
+<li class="chapter" data-level="5.5" data-path="results.html"><a href="results.html#kd-analysis"><i class="fa fa-check"></i><b>5.5</b> K/D analysis</a></li>
+<li class="chapter" data-level="5.6" data-path="results.html"><a href="results.html#individual-analysis"><i class="fa fa-check"></i><b>5.6</b> Individual analysis</a><ul>
+<li class="chapter" data-level="5.6.1" data-path="results.html"><a href="results.html#top-player-analysis"><i class="fa fa-check"></i><b>5.6.1</b> Top player analysis</a></li>
+<li class="chapter" data-level="5.6.2" data-path="results.html"><a href="results.html#lower-player-analysis"><i class="fa fa-check"></i><b>5.6.2</b> Lower player analysis</a></li>
+</ul></li>
+<li class="chapter" data-level="5.7" data-path="results.html"><a href="results.html#kill-ratio-vs.-ranking"><i class="fa fa-check"></i><b>5.7</b> Kill ratio vs. Ranking</a></li>
+</ul></li>
 <li class="chapter" data-level="6" data-path="interactive-component.html"><a href="interactive-component.html"><i class="fa fa-check"></i><b>6</b> Interactive component</a></li>
 <li class="chapter" data-level="7" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>7</b> Conclusion</a></li>
 <li class="divider"></li>
@@ -102,11 +119,26 @@
 <div id="header">
 <h1 class="title">PUBG</h1>
 <p class="author"><em>Zixiang Tang &amp; Yuwen Zhang</em></p>
-<p class="date"><em>2021-11-19</em></p>
+<p class="date"><em>2021-12-13</em></p>
 </div>
 <div id="introduction" class="section level1">
 <h1><span class="header-section-number">Chapter 1</span> Introduction</h1>
+<div id="background" class="section level2">
+<h2><span class="header-section-number">1.1</span> Background</h2>
+<p>For this project, We’ve decided to do something different: I am an avid lovers of video games and are especially passionate about the game PlayerUnknown’s Battleground, so I decide to analyze data from that game.</p>
+<div class="figure">
+<img src="pubg_pic1.png" id="id" class="class" style="width:50.0%;height:50.0%" alt="" />
+<p class="caption">Graph from <a href="https://www.theverge.com/2021/3/31/22360204/pubg-lite-shutdown-free-to-play" class="uri">https://www.theverge.com/2021/3/31/22360204/pubg-lite-shutdown-free-to-play</a></p>
+</div>
+</div>
+<div id="game-intro" class="section level2">
+<h2><span class="header-section-number">1.2</span> Game Intro</h2>
+<p>➔ PlayerUnknown’s Battleground, or PUBG in the following, is a first/third-person shooter battle royale style game that pits 100 players on a large island where players or teams fight to the last one remains.<br>
+➔ Players are airdropped onto the island where they can scavenge buildings to collect weapons, ammo, armor, first-aid, and other resources.<br>
+➔ Players strategize their game plan by either fighting or hiding until they become the last person or team surviving.<br>
+➔ A blue zone will appear randomly later into the game and players must remain outside the blue zone to avoid extra damage from the zone. The blue zone will zoom in every few minutes to corral players closer and closer together and the damage of staying in the blue zone will increase more and more.</p>
 
+</div>
 </div>
             </section>
 

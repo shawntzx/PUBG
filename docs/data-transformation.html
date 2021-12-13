@@ -24,7 +24,7 @@
 <meta name="author" content="Zixiang Tang &amp; Yuwen Zhang" />
 
 
-<meta name="date" content="2021-11-19" />
+<meta name="date" content="2021-12-13" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -73,11 +73,28 @@
 <li><a href="./">PUBG</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
-<li class="chapter" data-level="2" data-path="data-sources.html"><a href="data-sources.html"><i class="fa fa-check"></i><b>2</b> Data sources</a></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#background"><i class="fa fa-check"></i><b>1.1</b> Background</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#game-intro"><i class="fa fa-check"></i><b>1.2</b> Game Intro</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="data-sources.html"><a href="data-sources.html"><i class="fa fa-check"></i><b>2</b> Data sources</a><ul>
+<li class="chapter" data-level="2.1" data-path="data-sources.html"><a href="data-sources.html#kill-data-set"><i class="fa fa-check"></i><b>2.1</b> Kill data set</a></li>
+<li class="chapter" data-level="2.2" data-path="data-sources.html"><a href="data-sources.html#aggregated-match-data-set"><i class="fa fa-check"></i><b>2.2</b> Aggregated match data set</a></li>
+</ul></li>
 <li class="chapter" data-level="3" data-path="data-transformation.html"><a href="data-transformation.html"><i class="fa fa-check"></i><b>3</b> Data transformation</a></li>
 <li class="chapter" data-level="4" data-path="missing-values.html"><a href="missing-values.html"><i class="fa fa-check"></i><b>4</b> Missing values</a></li>
-<li class="chapter" data-level="5" data-path="results.html"><a href="results.html"><i class="fa fa-check"></i><b>5</b> Results</a></li>
+<li class="chapter" data-level="5" data-path="results.html"><a href="results.html"><i class="fa fa-check"></i><b>5</b> Results</a><ul>
+<li class="chapter" data-level="5.1" data-path="results.html"><a href="results.html#dead-vs.-time"><i class="fa fa-check"></i><b>5.1</b> Dead vs. Time</a></li>
+<li class="chapter" data-level="5.2" data-path="results.html"><a href="results.html#kill-by-method"><i class="fa fa-check"></i><b>5.2</b> Kill by method</a></li>
+<li class="chapter" data-level="5.3" data-path="results.html"><a href="results.html#winner-weapon-analysis"><i class="fa fa-check"></i><b>5.3</b> Winner weapon analysis</a></li>
+<li class="chapter" data-level="5.4" data-path="results.html"><a href="results.html#killer-positiomn-heatmap"><i class="fa fa-check"></i><b>5.4</b> Killer positiomn heatmap</a></li>
+<li class="chapter" data-level="5.5" data-path="results.html"><a href="results.html#kd-analysis"><i class="fa fa-check"></i><b>5.5</b> K/D analysis</a></li>
+<li class="chapter" data-level="5.6" data-path="results.html"><a href="results.html#individual-analysis"><i class="fa fa-check"></i><b>5.6</b> Individual analysis</a><ul>
+<li class="chapter" data-level="5.6.1" data-path="results.html"><a href="results.html#top-player-analysis"><i class="fa fa-check"></i><b>5.6.1</b> Top player analysis</a></li>
+<li class="chapter" data-level="5.6.2" data-path="results.html"><a href="results.html#lower-player-analysis"><i class="fa fa-check"></i><b>5.6.2</b> Lower player analysis</a></li>
+</ul></li>
+<li class="chapter" data-level="5.7" data-path="results.html"><a href="results.html#kill-ratio-vs.-ranking"><i class="fa fa-check"></i><b>5.7</b> Kill ratio vs. Ranking</a></li>
+</ul></li>
 <li class="chapter" data-level="6" data-path="interactive-component.html"><a href="interactive-component.html"><i class="fa fa-check"></i><b>6</b> Interactive component</a></li>
 <li class="chapter" data-level="7" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>7</b> Conclusion</a></li>
 <li class="divider"></li>
@@ -101,6 +118,38 @@
             <section class="normal" id="section-">
 <div id="data-transformation" class="section level1">
 <h1><span class="header-section-number">Chapter 3</span> Data transformation</h1>
+<p>There is not much cleaning required for the dataset. We kept only the rows and columns we need in order to shrink down the size of the dataset.</p>
+<p>Head of kill dataset</p>
+<pre><code>##                                                           match_id time    killed_by killer_placement     killer_name killer_position_x killer_position_y
+## 1 2U4GBNA0YmkAtDV8BIUtsazckNPT4YjBr8TFfiPl9ZSsCr8L4W_NKq7eHFO2HMHt  622 Down and Out                3    HZCBIUBIUBIU          417104.3          481058.3
+## 2 2U4GBNA0YmkAtDV8BIUtsazckNPT4YjBr8TFfiPl9ZSsCr8L4W_NKq7eHFO2HMHt  136         M416               19 RunFastKneeGrow          569463.8          381541.6
+## 3 2U4GBNA0YmkAtDV8BIUtsazckNPT4YjBr8TFfiPl9ZSsCr8L4W_NKq7eHFO2HMHt  785        M16A4                3    Daniellalala          422891.6          484844.6
+## 4 2U4GBNA0YmkAtDV8BIUtsazckNPT4YjBr8TFfiPl9ZSsCr8L4W_NKq7eHFO2HMHt  436         UMP9               18       orangecsl          583931.7          480778.6
+## 5 2U4GBNA0YmkAtDV8BIUtsazckNPT4YjBr8TFfiPl9ZSsCr8L4W_NKq7eHFO2HMHt 1511         M416                6     niuhongfei1          271145.1          562685.8
+## 6 2U4GBNA0YmkAtDV8BIUtsazckNPT4YjBr8TFfiPl9ZSsCr8L4W_NKq7eHFO2HMHt  801      Grenade               16    THUGNIFlCENT          575606.3          503138.2
+##        victim_name victim_position_x victim_position_y
+## 1 RealCoconutjuice          413859.3          484157.8
+## 2   colonelcrunker          569128.9          381294.2
+## 3        Le-Passer          422423.9          483145.9
+## 4         Jamarkus          585560.0          483584.9
+## 5     Blind_LeeSin          270507.0          562770.3
+## 6     THUGNIFlCENT          575606.3          503138.2</code></pre>
+<p><br>
+Head of aggregated match dataset</p>
+<pre><code>##                                                           match_id   player_name player_survive_time player_kills player_dist_ride player_dist_walk
+## 1 2U4GBNA0YmmhivBOFUiipklIPVdC0DRgkX88eyhTYGiAnoXrjvEhNQHZMWi8d5y9       m3xdave             106.351            0            0.000         37.91984
+## 2 2U4GBNA0YmmhivBOFUiipklIPVdC0DRgkX88eyhTYGiAnoXrjvEhNQHZMWi8d5y9    UDaddyHere            1690.021            3          292.205       3457.03613
+## 3 2U4GBNA0YmmhivBOFUiipklIPVdC0DRgkX88eyhTYGiAnoXrjvEhNQHZMWi8d5y9       Dummy05             103.415            0            0.000        106.21590
+## 4 2U4GBNA0YmmhivBOFUiipklIPVdC0DRgkX88eyhTYGiAnoXrjvEhNQHZMWi8d5y9    NA-Wuyifan             272.838            0            0.000        126.95983
+## 5 2U4GBNA0YmmhivBOFUiipklIPVdC0DRgkX88eyhTYGiAnoXrjvEhNQHZMWi8d5y9 kickinchicken             134.342            0            0.000         43.34671
+## 6 2U4GBNA0YmmhivBOFUiipklIPVdC0DRgkX88eyhTYGiAnoXrjvEhNQHZMWi8d5y9    WhiteCrane             193.885            0            0.000        218.51520
+##   team_placement
+## 1             88
+## 2              8
+## 3             89
+## 4             67
+## 5             81
+## 6             74</code></pre>
 
 </div>
             </section>

@@ -24,7 +24,7 @@
 <meta name="author" content="Zixiang Tang &amp; Yuwen Zhang" />
 
 
-<meta name="date" content="2021-11-19" />
+<meta name="date" content="2021-12-13" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -73,11 +73,28 @@
 <li><a href="./">PUBG</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
-<li class="chapter" data-level="2" data-path="data-sources.html"><a href="data-sources.html"><i class="fa fa-check"></i><b>2</b> Data sources</a></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#background"><i class="fa fa-check"></i><b>1.1</b> Background</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#game-intro"><i class="fa fa-check"></i><b>1.2</b> Game Intro</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="data-sources.html"><a href="data-sources.html"><i class="fa fa-check"></i><b>2</b> Data sources</a><ul>
+<li class="chapter" data-level="2.1" data-path="data-sources.html"><a href="data-sources.html#kill-data-set"><i class="fa fa-check"></i><b>2.1</b> Kill data set</a></li>
+<li class="chapter" data-level="2.2" data-path="data-sources.html"><a href="data-sources.html#aggregated-match-data-set"><i class="fa fa-check"></i><b>2.2</b> Aggregated match data set</a></li>
+</ul></li>
 <li class="chapter" data-level="3" data-path="data-transformation.html"><a href="data-transformation.html"><i class="fa fa-check"></i><b>3</b> Data transformation</a></li>
 <li class="chapter" data-level="4" data-path="missing-values.html"><a href="missing-values.html"><i class="fa fa-check"></i><b>4</b> Missing values</a></li>
-<li class="chapter" data-level="5" data-path="results.html"><a href="results.html"><i class="fa fa-check"></i><b>5</b> Results</a></li>
+<li class="chapter" data-level="5" data-path="results.html"><a href="results.html"><i class="fa fa-check"></i><b>5</b> Results</a><ul>
+<li class="chapter" data-level="5.1" data-path="results.html"><a href="results.html#dead-vs.-time"><i class="fa fa-check"></i><b>5.1</b> Dead vs. Time</a></li>
+<li class="chapter" data-level="5.2" data-path="results.html"><a href="results.html#kill-by-method"><i class="fa fa-check"></i><b>5.2</b> Kill by method</a></li>
+<li class="chapter" data-level="5.3" data-path="results.html"><a href="results.html#winner-weapon-analysis"><i class="fa fa-check"></i><b>5.3</b> Winner weapon analysis</a></li>
+<li class="chapter" data-level="5.4" data-path="results.html"><a href="results.html#killer-positiomn-heatmap"><i class="fa fa-check"></i><b>5.4</b> Killer positiomn heatmap</a></li>
+<li class="chapter" data-level="5.5" data-path="results.html"><a href="results.html#kd-analysis"><i class="fa fa-check"></i><b>5.5</b> K/D analysis</a></li>
+<li class="chapter" data-level="5.6" data-path="results.html"><a href="results.html#individual-analysis"><i class="fa fa-check"></i><b>5.6</b> Individual analysis</a><ul>
+<li class="chapter" data-level="5.6.1" data-path="results.html"><a href="results.html#top-player-analysis"><i class="fa fa-check"></i><b>5.6.1</b> Top player analysis</a></li>
+<li class="chapter" data-level="5.6.2" data-path="results.html"><a href="results.html#lower-player-analysis"><i class="fa fa-check"></i><b>5.6.2</b> Lower player analysis</a></li>
+</ul></li>
+<li class="chapter" data-level="5.7" data-path="results.html"><a href="results.html#kill-ratio-vs.-ranking"><i class="fa fa-check"></i><b>5.7</b> Kill ratio vs. Ranking</a></li>
+</ul></li>
 <li class="chapter" data-level="6" data-path="interactive-component.html"><a href="interactive-component.html"><i class="fa fa-check"></i><b>6</b> Interactive component</a></li>
 <li class="chapter" data-level="7" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>7</b> Conclusion</a></li>
 <li class="divider"></li>
@@ -101,7 +118,52 @@
             <section class="normal" id="section-">
 <div id="data-sources" class="section level1">
 <h1><span class="header-section-number">Chapter 2</span> Data sources</h1>
+<p>We’ve found a dataset of over 720,000 competitive matches on Kaggle (<a href="https://www.kaggle.com/skihikingkevin/pubg-match-deaths" class="uri">https://www.kaggle.com/skihikingkevin/pubg-match-deaths</a>), which is scraped from a game tracker website (<a href="https://pubg.op.gg/" class="uri">https://pubg.op.gg/</a>).</p>
+<p>The dataset has two parts, one is kill_match_stats_final, which records every death that occurred within the 720k matches, the other is agg_match_stats, which contains each match’s meta information and summarizes player statistics (as provided by PUBG). The death dataset tracks each death’s weapon, killer name, killer place, killer position, victim name, victim place, victim position, and death time, etc. The aggregate dataset includes various aggregated statistics such as player kills, player damage, player distance ride, player distance walk, player team, and player team placement, etc.</p>
+<p>We used the last two datasets of both kill and match stats, and analyzed games on the Erangel map in single player mode.</p>
+<div id="kill-data-set" class="section level2">
+<h2><span class="header-section-number">2.1</span> Kill data set</h2>
+<p>The kill data set contains the following variables:</p>
+<p><code>kill_by</code>: method/weapon of killing<br>
+<code>killer_name</code>: player name of the killer<br>
+<code>killer_placement</code>: killer final ranking of the game<br>
+<code>killer_position_x</code>: killer x-coordinate on the map, ranging from 0 to 800000<br>
+<code>killer_position_y</code>: killer y-coordinate on the map, ranging from 0 to 800000<br>
+<code>map</code>: map of the game, there are currently four maps in PUBG, which are Erangel, Miramar, Sanhok, and Vikendi<br>
+<code>match_id</code>: unique identification of the game, which can be mapped to the match dataset<br>
+<code>time</code>: death time, measured by seconds<br>
+<code>victim_name</code>: player name of the victim<br>
+<code>victim_placement</code>: victim final ranking of the game<br>
+<code>victim_position_x</code>: victim x-coordinate on the map, ranging from 0 to 800000<br>
+<code>victim_position_y</code>: victim y-coordinate on the map, ranging from 0 to 800000</p>
+</div>
+<div id="aggregated-match-data-set" class="section level2">
+<h2><span class="header-section-number">2.2</span> Aggregated match data set</h2>
+<p>The aggregated data set contains the following variables:<br></p>
+<p><code>date</code>: date of the game<br>
+<code>game_size</code>: total amount of players in that game<br>
+<code>match_id</code>: unique identification of the game, which can be mapped to the kill data set<br>
+<code>match_mode</code>: the perspective of the game, there are two kinds of perspective in PUBG, tpp (third-person-perspective) and fpp (first-person-perspective)<br>
+<code>party_size</code>: amount of players in each group, there are three modes in party size, single (1 player/team), duo (up to 2 players/team), and squad (up to 4 players/team)<br>
+<code>player_assists</code>: player assists in each game, assist means causing damage but not death to the other players<br>
+<code>player_dbno</code>: play down but not out in each game, down but not out means down but got revived by teammate (only applicable in non-single mode)<br>
+<code>player_dist_ride</code>: distance that player traveled through vehicles<br>
+<code>player_dist_walk</code>: distance that player traveled by walking<br>
+<code>player_dmg</code>: total player damage caused on other players<br>
+<code>player_kills</code>: total people killed by that player<br>
+<code>player_name</code>: -<br>
+<code>player_survive_time</code>: total time passed before player dies/wins<br>
+<code>team_id</code>: -<br>
+<code>team_placement</code>: ranking of that team in that game</p>
+<div class="figure">
+<img src="erangel.jpg" id="id" class="class" style="width:50.0%;height:50.0%" alt="" />
+<p class="caption">Erangel map. Graph from the Kaggle dataset</p>
+</div>
+<p>Note:<br>
+➔ There are several maps in PUBG including Erangel, Miramar, Sanhok, and Vikendi. Erangel is the oldest and more popular map.<br>
+➔ There are three player modes including single (1 player per team), duo (up to 2 players per team), and squad (up to 4 players per team)</p>
 
+</div>
 </div>
             </section>
 
