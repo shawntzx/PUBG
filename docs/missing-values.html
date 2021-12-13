@@ -24,7 +24,7 @@
 <meta name="author" content="Zixiang Tang &amp; Yuwen Zhang" />
 
 
-<meta name="date" content="2021-11-19" />
+<meta name="date" content="2021-12-13" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -73,11 +73,28 @@
 <li><a href="./">PUBG</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
-<li class="chapter" data-level="2" data-path="data-sources.html"><a href="data-sources.html"><i class="fa fa-check"></i><b>2</b> Data sources</a></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#background"><i class="fa fa-check"></i><b>1.1</b> Background</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#game-intro"><i class="fa fa-check"></i><b>1.2</b> Game Intro</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="data-sources.html"><a href="data-sources.html"><i class="fa fa-check"></i><b>2</b> Data sources</a><ul>
+<li class="chapter" data-level="2.1" data-path="data-sources.html"><a href="data-sources.html#kill-data-set"><i class="fa fa-check"></i><b>2.1</b> Kill data set</a></li>
+<li class="chapter" data-level="2.2" data-path="data-sources.html"><a href="data-sources.html#aggregated-match-data-set"><i class="fa fa-check"></i><b>2.2</b> Aggregated match data set</a></li>
+</ul></li>
 <li class="chapter" data-level="3" data-path="data-transformation.html"><a href="data-transformation.html"><i class="fa fa-check"></i><b>3</b> Data transformation</a></li>
 <li class="chapter" data-level="4" data-path="missing-values.html"><a href="missing-values.html"><i class="fa fa-check"></i><b>4</b> Missing values</a></li>
-<li class="chapter" data-level="5" data-path="results.html"><a href="results.html"><i class="fa fa-check"></i><b>5</b> Results</a></li>
+<li class="chapter" data-level="5" data-path="results.html"><a href="results.html"><i class="fa fa-check"></i><b>5</b> Results</a><ul>
+<li class="chapter" data-level="5.1" data-path="results.html"><a href="results.html#dead-vs.-time"><i class="fa fa-check"></i><b>5.1</b> Dead vs. Time</a></li>
+<li class="chapter" data-level="5.2" data-path="results.html"><a href="results.html#kill-by-method"><i class="fa fa-check"></i><b>5.2</b> Kill by method</a></li>
+<li class="chapter" data-level="5.3" data-path="results.html"><a href="results.html#winner-weapon-analysis"><i class="fa fa-check"></i><b>5.3</b> Winner weapon analysis</a></li>
+<li class="chapter" data-level="5.4" data-path="results.html"><a href="results.html#killer-positiomn-heatmap"><i class="fa fa-check"></i><b>5.4</b> Killer positiomn heatmap</a></li>
+<li class="chapter" data-level="5.5" data-path="results.html"><a href="results.html#kd-analysis"><i class="fa fa-check"></i><b>5.5</b> K/D analysis</a></li>
+<li class="chapter" data-level="5.6" data-path="results.html"><a href="results.html#individual-analysis"><i class="fa fa-check"></i><b>5.6</b> Individual analysis</a><ul>
+<li class="chapter" data-level="5.6.1" data-path="results.html"><a href="results.html#top-player-analysis"><i class="fa fa-check"></i><b>5.6.1</b> Top player analysis</a></li>
+<li class="chapter" data-level="5.6.2" data-path="results.html"><a href="results.html#lower-player-analysis"><i class="fa fa-check"></i><b>5.6.2</b> Lower player analysis</a></li>
+</ul></li>
+<li class="chapter" data-level="5.7" data-path="results.html"><a href="results.html#kill-ratio-vs.-ranking"><i class="fa fa-check"></i><b>5.7</b> Kill ratio vs. Ranking</a></li>
+</ul></li>
 <li class="chapter" data-level="6" data-path="interactive-component.html"><a href="interactive-component.html"><i class="fa fa-check"></i><b>6</b> Interactive component</a></li>
 <li class="chapter" data-level="7" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>7</b> Conclusion</a></li>
 <li class="divider"></li>
@@ -101,308 +118,12 @@
             <section class="normal" id="section-">
 <div id="missing-values" class="section level1">
 <h1><span class="header-section-number">Chapter 4</span> Missing values</h1>
-<p><br><br></p>
-<p>The data set that we are working on contains two kinds of data, kill data and match data, each consists of four subsets of around 2GB on a singular subset.
-For this analysis we only used the last dataset of the kill and match data.</p>
-<table style="width:100%;">
-<colgroup>
-<col width="5%" />
-<col width="6%" />
-<col width="7%" />
-<col width="8%" />
-<col width="8%" />
-<col width="3%" />
-<col width="28%" />
-<col width="2%" />
-<col width="6%" />
-<col width="7%" />
-<col width="8%" />
-<col width="8%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th align="left">killed_by</th>
-<th align="left">killer_name</th>
-<th align="right">killer_placement</th>
-<th align="right">killer_position_x</th>
-<th align="right">killer_position_y</th>
-<th align="left">map</th>
-<th align="left">match_id</th>
-<th align="right">time</th>
-<th align="left">victim_name</th>
-<th align="right">victim_placement</th>
-<th align="right">victim_position_x</th>
-<th align="right">victim_position_y</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">M249</td>
-<td align="left">0932313woaini</td>
-<td align="right">7</td>
-<td align="right">529007.7</td>
-<td align="right">440035.5</td>
-<td align="left">MIRAMAR</td>
-<td align="left">2U4GBNA0YmkBbLEF24GGKLLAPoDQjAD8DoJFecsw9jUiNEkyvGCnOFxmxlo9x0cc</td>
-<td align="right">1209</td>
-<td align="left">GODusopp</td>
-<td align="right">11</td>
-<td align="right">526111.8</td>
-<td align="right">432951.8</td>
-</tr>
-<tr class="even">
-<td align="left">Kar98k</td>
-<td align="left">arunrunrun</td>
-<td align="right">6</td>
-<td align="right">440414.8</td>
-<td align="right">285918.1</td>
-<td align="left">MIRAMAR</td>
-<td align="left">2U4GBNA0YmkBbLEF24GGKLLAPoDQjAD8DoJFecsw9jUiNEkyvGCnOFxmxlo9x0cc</td>
-<td align="right">1096</td>
-<td align="left">TheOnly_0ne</td>
-<td align="right">13</td>
-<td align="right">438853.4</td>
-<td align="right">280981.6</td>
-</tr>
-<tr class="odd">
-<td align="left">Down and Out</td>
-<td align="left">Rabbit812</td>
-<td align="right">6</td>
-<td align="right">439923.2</td>
-<td align="right">282419.0</td>
-<td align="left">MIRAMAR</td>
-<td align="left">2U4GBNA0YmkBbLEF24GGKLLAPoDQjAD8DoJFecsw9jUiNEkyvGCnOFxmxlo9x0cc</td>
-<td align="right">1096</td>
-<td align="left">NOAIM1</td>
-<td align="right">13</td>
-<td align="right">437034.8</td>
-<td align="right">282477.7</td>
-</tr>
-<tr class="even">
-<td align="left">Down and Out</td>
-<td align="left">0932313woaini</td>
-<td align="right">7</td>
-<td align="right">530312.4</td>
-<td align="right">440969.0</td>
-<td align="left">MIRAMAR</td>
-<td align="left">2U4GBNA0YmkBbLEF24GGKLLAPoDQjAD8DoJFecsw9jUiNEkyvGCnOFxmxlo9x0cc</td>
-<td align="right">1209</td>
-<td align="left">liweiliwei</td>
-<td align="right">11</td>
-<td align="right">528304.4</td>
-<td align="right">439696.8</td>
-</tr>
-<tr class="odd">
-<td align="left">SCAR-L</td>
-<td align="left">sa11y1126</td>
-<td align="right">3</td>
-<td align="right">466609.2</td>
-<td align="right">409546.3</td>
-<td align="left">MIRAMAR</td>
-<td align="left">2U4GBNA0YmkBbLEF24GGKLLAPoDQjAD8DoJFecsw9jUiNEkyvGCnOFxmxlo9x0cc</td>
-<td align="right">1793</td>
-<td align="left">PKBskg</td>
-<td align="right">5</td>
-<td align="right">462901.5</td>
-<td align="right">403350.5</td>
-</tr>
-<tr class="even">
-<td align="left">Bluezone</td>
-<td align="left">NA</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-<td align="left">MIRAMAR</td>
-<td align="left">2U4GBNA0YmkBbLEF24GGKLLAPoDQjAD8DoJFecsw9jUiNEkyvGCnOFxmxlo9x0cc</td>
-<td align="right">1505</td>
-<td align="left">0932313woaini</td>
-<td align="right">7</td>
-<td align="right">495367.2</td>
-<td align="right">419491.3</td>
-</tr>
-</tbody>
-</table>
-<p>First we take a look at the kill data set, which tracks the kill information of each game.<br>
-The data set contains the following variable:<br>
-<code>kill_by</code>: method/weapon of killing<br>
-<code>killer_name</code>: player name of the killer<br>
-<code>killer_placement</code>: killer final ranking of the game<br>
-<code>killer_position_x</code>: killer x-coordinate on the map, ranging from 0 to 800000<br>
-<code>killer_position_y</code>: killer y-coordinate on the map, ranging from 0 to 800000<br>
-<code>map</code>: map of the game, there are currently four maps in PUBG, which are Erangel, Miramar, Sanhok, and Vikendi<br>
-<code>match_id</code>: unique identification of the game, which can be mapped to the match dataset<br>
-<code>time</code>: death time, measured by seconds<br>
-<code>victim_name</code>: player name of the victim<br>
-<code>victim_placement</code>: victim final ranking of the game<br>
-<code>victim_position_x</code>: victim x-coordinate on the map, ranging from 0 to 800000<br>
-<code>victim_position_y</code>: victim y-coordinate on the map, ranging from 0 to 800000</p>
-<p><br><br></p>
-<p><img src="finalproj_files/figure-html/unnamed-chunk-8-1.png" width="1536" /><img src="finalproj_files/figure-html/unnamed-chunk-8-2.png" width="1536" /></p>
+<p><img src="finalproj_files/figure-html/unnamed-chunk-9-1.png" width="1536" /><img src="finalproj_files/figure-html/unnamed-chunk-9-2.png" width="1536" /></p>
 <p>From the missing pattern graph we can see that most of the data in the data set is complete, consisting of over 10 million/almost 90% of data. The next significant missingness is of the killer information, which makes sense because in PUBG player can be killed not only by other players but also other reasons such as bleeding out due to bluezone, in which case there will not be a killer.<br>
 There is also missing values on <code>victim_placement</code> and <code>map</code>, which I would deem as wrong values because these information should be present in the data under any circumstance. In this case, I would consider dropping these values.</p>
 <p><br><br></p>
-<table>
-<colgroup>
-<col width="7%" />
-<col width="3%" />
-<col width="25%" />
-<col width="4%" />
-<col width="4%" />
-<col width="5%" />
-<col width="4%" />
-<col width="6%" />
-<col width="6%" />
-<col width="4%" />
-<col width="5%" />
-<col width="5%" />
-<col width="7%" />
-<col width="3%" />
-<col width="5%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th align="left">date</th>
-<th align="right">game_size</th>
-<th align="left">match_id</th>
-<th align="left">match_mode</th>
-<th align="right">party_size</th>
-<th align="right">player_assists</th>
-<th align="right">player_dbno</th>
-<th align="right">player_dist_ride</th>
-<th align="right">player_dist_walk</th>
-<th align="right">player_dmg</th>
-<th align="right">player_kills</th>
-<th align="left">player_name</th>
-<th align="right">player_survive_time</th>
-<th align="right">team_id</th>
-<th align="right">team_placement</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">2017-10-31 02:41:53</td>
-<td align="right">95</td>
-<td align="left">2U4GBNA0YmmhivBOFUiipklIPVdC0DRgkX88eyhTYGiAnoXrjvEhNQHZMWi8d5y9</td>
-<td align="left">tpp</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0.000</td>
-<td align="right">37.91984</td>
-<td align="right">20</td>
-<td align="right">0</td>
-<td align="left">m3xdave</td>
-<td align="right">106.351</td>
-<td align="right">100000</td>
-<td align="right">88</td>
-</tr>
-<tr class="even">
-<td align="left">2017-10-31 02:41:53</td>
-<td align="right">95</td>
-<td align="left">2U4GBNA0YmmhivBOFUiipklIPVdC0DRgkX88eyhTYGiAnoXrjvEhNQHZMWi8d5y9</td>
-<td align="left">tpp</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">292.205</td>
-<td align="right">3457.03613</td>
-<td align="right">387</td>
-<td align="right">3</td>
-<td align="left">UDaddyHere</td>
-<td align="right">1690.021</td>
-<td align="right">100006</td>
-<td align="right">8</td>
-</tr>
-<tr class="odd">
-<td align="left">2017-10-31 02:41:53</td>
-<td align="right">95</td>
-<td align="left">2U4GBNA0YmmhivBOFUiipklIPVdC0DRgkX88eyhTYGiAnoXrjvEhNQHZMWi8d5y9</td>
-<td align="left">tpp</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0.000</td>
-<td align="right">106.21590</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="left">Dummy05</td>
-<td align="right">103.415</td>
-<td align="right">100010</td>
-<td align="right">89</td>
-</tr>
-<tr class="even">
-<td align="left">2017-10-31 02:41:53</td>
-<td align="right">95</td>
-<td align="left">2U4GBNA0YmmhivBOFUiipklIPVdC0DRgkX88eyhTYGiAnoXrjvEhNQHZMWi8d5y9</td>
-<td align="left">tpp</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0.000</td>
-<td align="right">126.95983</td>
-<td align="right">91</td>
-<td align="right">0</td>
-<td align="left">NA-Wuyifan</td>
-<td align="right">272.838</td>
-<td align="right">100019</td>
-<td align="right">67</td>
-</tr>
-<tr class="odd">
-<td align="left">2017-10-31 02:41:53</td>
-<td align="right">95</td>
-<td align="left">2U4GBNA0YmmhivBOFUiipklIPVdC0DRgkX88eyhTYGiAnoXrjvEhNQHZMWi8d5y9</td>
-<td align="left">tpp</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0.000</td>
-<td align="right">43.34671</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="left">kickinchicken</td>
-<td align="right">134.342</td>
-<td align="right">100024</td>
-<td align="right">81</td>
-</tr>
-<tr class="even">
-<td align="left">2017-10-31 02:41:53</td>
-<td align="right">95</td>
-<td align="left">2U4GBNA0YmmhivBOFUiipklIPVdC0DRgkX88eyhTYGiAnoXrjvEhNQHZMWi8d5y9</td>
-<td align="left">tpp</td>
-<td align="right">1</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">0.000</td>
-<td align="right">218.51520</td>
-<td align="right">71</td>
-<td align="right">0</td>
-<td align="left">WhiteCrane</td>
-<td align="right">193.885</td>
-<td align="right">100026</td>
-<td align="right">74</td>
-</tr>
-</tbody>
-</table>
-<p>Then we analyze the aggregated match data set, which tracks the meta data of each game<br>
-The data set contains the following variable:<br>
-<code>date</code>: date of the game<br>
-<code>game_size</code>: total amount of players in that game<br>
-<code>match_id</code>: unique identification of the game, which can be mapped to the kill data set<br>
-<code>match_mode</code>: the perspective of the game, there are two kinds of perspective in PUBG, tpp (third-person-perspective) and fpp (first-person-perspective)<br>
-<code>party_size</code>: amount of players in each group, there are three modes in party size, single (1 player/team), duo (up to 2 players/team), and squad (up to 4 players/team)<br>
-<code>player_assists</code>: player assists in each game, assist means causing damage but not death to the other players<br>
-<code>player_dbno</code>: play down but not out in each game, down but not out means down but got revived by teammate (only applicable in non-single mode)<br>
-<code>player_dist_ride</code>: distance that player traveled through vehicles<br>
-<code>player_dist_walk</code>: distance that player traveled by walking<br>
-<code>player_dmg</code>: total player damage caused on other players<br>
-<code>player_kills</code>: total people killed by that player<br>
-<code>player_name</code>: -<br>
-<code>player_survive_time</code>: total time passed before player dies/wins<br>
-<code>team_id</code>: -<br>
-<code>team_placement</code>: ranking of that team in that game</p>
-<p><br><br></p>
 <p><img src="finalproj_files/figure-html/unnamed-chunk-10-1.png" width="1536" /><img src="finalproj_files/figure-html/unnamed-chunk-10-2.png" width="1536" /></p>
-<p>From the missing pattern graph we can see that nearly all data in this set in complete, which makes sense because it’s an aggregated match data that must have already had some human modification to ensure completeness. Almost there are very few amount of missingness in <code>player_name</code>, but is mostly dismissable.</p>
+<p>From the missing pattern graph we can see that nearly all data in this set in complete, which makes sense because it’s an aggregated match data that must have already had some human modification to ensure completeness. For the data that we are using, there is no missingness</p>
 
 </div>
             </section>

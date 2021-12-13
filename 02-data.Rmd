@@ -4,7 +4,10 @@ We've found a dataset of over 720,000 competitive matches on Kaggle (https://www
 
 The dataset has two parts, one is kill_match_stats_final, which records every death that occurred within the 720k matches, the other is agg_match_stats, which contains each match's meta information and summarizes player statistics (as provided by PUBG). The death dataset tracks each death’s weapon, killer name, killer place, killer position, victim name, victim place, victim position, and death time, etc. The aggregate dataset includes various aggregated statistics such as player kills, player damage, player distance ride, player distance walk, player team, and player team placement, etc.
 
-We used the last two datasets of both kill and match stats, and analyzed games on the Erangel map in single player mode. 
+We used the last two datasets of both kill and match stats, and analyzed games on the Erangel map in single player mode.
+
+
+## Kill data set
 
 The kill data set contains the following variables:
 
@@ -20,6 +23,9 @@ The kill data set contains the following variables:
 `victim_placement`: victim final ranking of the game<br>
 `victim_position_x`: victim x-coordinate on the map, ranging from 0 to 800000<br>
 `victim_position_y`: victim y-coordinate on the map, ranging from 0 to 800000
+
+
+## Aggregated match data set
 
 The aggregated data set contains the following variables:<br>
 
@@ -39,8 +45,10 @@ The aggregated data set contains the following variables:<br>
 `team_id`: -<br>
 `team_placement`: ranking of that team in that game
 
+![Erangel map. Graph from the Kaggle dataset](erangel.jpg){#id .class width=50% height=50%}
+
+
 Note:<br>
 ➔ There are several maps in PUBG including Erangel, Miramar, Sanhok, and Vikendi. Erangel is the oldest and more popular map.<br>
 ➔ There are three player modes including single (1 player per team), duo (up to 2 players per team), and squad (up to 4 players per team)
 
-![Erangel map. Graph from the Kaggle dataset](erangel.jpg){#id .class width=50% height=50%}

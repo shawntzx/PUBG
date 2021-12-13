@@ -1,2 +1,12 @@
 # Conclusion
 
+From the analysis, we have the following conclusion:
+
+➔ The amount of total players dead vs average time follows roughly a logarithmic relationship.<br><br>
+➔ The 5.56mm ammo family, especially M416, and the 7.62mm ammo family, especially AKM, are the most popular weapons in the game.<br><br>
+➔ Players will usually go for any weapon they have in hand at the beginning of each game but will slowly reach for more popular weapons as the game proceeds.<br><br>
+➔ Usually it's good to keep an assault rifle and a sniper rifle for short distance kills and long distance kills.<br><br>
+➔ Pochinki, Mylta, Sosnovka Military Base are the top location of heavy fighting.<br><br>
+➔ It's very rare for players have a high K/D, most K/Ds are around 0 to 1.5.<br><br>
+➔ Players can consider picking a preferred drop spot.<br><br>
+➔ For average players, to gain a higher ranking, it's wiser to hide than fight.<br>

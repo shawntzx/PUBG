@@ -107,6 +107,7 @@ plot_missing(kill_stat, TRUE)
 
 From the missing pattern graph we can see that most of the data in the data set is complete, consisting of over 10 million/almost 90% of data. The next significant missingness is of the killer information, which makes sense because in PUBG player can be killed not only by other players but also other reasons such as bleeding out due to bluezone, in which case there will not be a killer.<br>
 There is also missing values on `victim_placement` and `map`, which I would deem as wrong values because these information should be present in the data under any circumstance. In this case, I would consider dropping these values.
+
 <br><br>
 
 ```{r, fig.width=16, fig.height=9}

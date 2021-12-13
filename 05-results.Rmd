@@ -1,24 +1,16 @@
 # Results
 
 ```{r}
-library(cowplot)
-library(magick)
 library(jpeg)
 library(grid)
+library(ggalluvial)
 ```
 
 ```{r}
 kill_1_erang = kill_stat %>%
   filter(match_id %in% agg_stat$match_id) %>%
   arrange(match_id, time)
-```
 
-
-```{r}
-#TODO: scatter plot of total dead
-```
-
-```{r}
 kill_1_erang = kill_1_erang %>%
   filter(killer_position_x >= 0 & killer_position_x <= 800000 & 
            killer_position_y >= 0 & killer_position_y <= 800000 &
@@ -28,33 +20,314 @@ kill_1_erang$killer_position_x = kill_1_erang$killer_position_x*4096/800000
 kill_1_erang$killer_position_y = kill_1_erang$killer_position_y*4096/800000
 kill_1_erang$victim_position_x = kill_1_erang$victim_position_x*4096/800000
 kill_1_erang$victim_position_y = kill_1_erang$victim_position_y*4096/800000
+```
 
+
+## Dead vs. Time
+
+First we take a look at the relationship between average time and total players dead in each game.
+
+```{r, fig.width=6, fig.height=4}
+dead = kill_1_erang %>% group_by(match_id) %>% 
+  arrange(time) %>% mutate(num = row_number())
+
+dead = dead %>% group_by(num) %>% summarise(avg_time=mean(time))
+
+ggplot(dead, aes(x=avg_time, y=num)) + geom_point() +
+  xlab('Average time') + 
+  ylab('Death number') + 
+  ggtitle("Scatter plot of mean time to reach total dead")
+
+ggplot(dead, aes(x=log(avg_time), y=num)) + geom_point() +
+  xlab('log(Average time)') + 
+  ylab('Death number') + 
+  ggtitle("Scatter plot of log mean time to reach total dead")
+```
+
+Clearly, there are more people dying at the beginning of the game, and as the game proceed, the amount of people dying slows down.<br>
+After transforming the x axis to a log frame, it’s clear to see the the total players dead vs average time follows roughly a logarithmic relationship.
+
+
+## Kill by method
+
+Now we move on to the popular weapon or kill method of the games.<br>
+To analyze that, we create a cleveland dot plot of players killed by each method.
+
+```{r, fig.width=8, fig.height=4}
+kill_by = kill_1_erang %>% 
+  group_by(killed_by) %>% 
+  summarize(num=n()) %>% 
+  ungroup()
+
+kill_by_above25000 = kill_by %>%
+  filter(num >= 25000)
+
+ggplot(kill_by_above25000, aes(x=num, y=fct_reorder(killed_by,num))) + geom_point() +
+  xlab('number') + 
+  ylab('method') +
+  ggtitle("Cleveland dot plot of kill by method (count >= 25000)")
+
+kill_by_below25000 = kill_by%>%filter(num<25000)
+
+ggplot(kill_by_below25000, aes(x=num, y=fct_reorder(killed_by,num))) + geom_point() +
+  xlab('number') + 
+  ylab('method') + 
+  ggtitle("Cleveland dot plot of kill by method (count < 25000)")
+```
+
+From the graph we can see that M416 is the dominate weapon of the game.<br>
+Moreover, weapons from the 5.56mm ammo family (M416, M16A4, SCAR-L etc), are in general much more popular than weapons from the other ammo family.<br>
+Assault Rifles, such as M416, M16A4, and SCAR-L from the 5.56mm ammo family, and AKM from the 7.62mm ammo family, are much more popular than other weapons kinds, such as Sniper Rifles (Kar 98k, M24 etc) or Designated Marksman Rifles (Mini 14, SKS etc).<br>
+Other non-ammo weapon, such as pan, crowbar, or molokov are in general less popular weapon than guns.<br><br>
+We will move on to show kill by method based on specific time range in the interative section
+
+
+## Winner weapon analysis
+
+We now will analyze the winning player of each game and their choice of weapon.<br>
+For this analysis we will look at the winning player of each game and the weapon they used for the last 10 kills that they achieved in each game, if exist. Then we will create an ALLUVIAL DIAGRAM to track the movement of weapons of these last 10 kills.
+
+```{r}
+kill_first = kill_1_erang %>% filter(killer_placement == 1) %>%
+  arrange(match_id, time) %>% group_by(match_id) %>% 
+  slice(tail(row_number(), 10))
+
+kill_first = kill_first %>% group_by(match_id) %>%
+  mutate(total_kill = 1:n())
+
+order = c('AKM', 'Groza', 'DP-28', 'SKS', 'Mk14', 'Kar98k', 'M24',
+          'Micro UZI', 'UMP9', 'VSS',
+          'SCAR-L', 'M16A4', 'M416', 'AUG', 'M249', 'Mini 14',
+          'Vector',
+          'Tommy Gun',
+          'AWM',
+          'S1897', 'S686', 'S12K',
+          'P1911', 'P92', 'P18C', 'R1895',
+          'Crossbow', 'Falling',
+          'Punch', 'Pan', 'Sickle', 'Machete', 'Crowbar',
+          'Grenade', 'death.ProjMolotov_C', 'death.ProjMolotov_DamageField_C', 'death.Buff_FireDOT_C',
+          'Hit by Car', 'Uaz', 'Buggy', 'Dacia', 'Motorbike', 'Motorbike (SideCar)', 'Boat', 'Aquarail')
+
+kill_first$killed_by = factor(kill_first$killed_by, levels = order)
+```
+
+```{r, fig.width=12, fig.height=6}
+ggplot(kill_first, aes(alluvium = match_id, x = total_kill, 
+                       stratum = killed_by)) +
+  geom_alluvium(alpha = 0.8) +
+  geom_stratum(aes(fill = killed_by)) +
+  scale_x_continuous(breaks = c(1:10))
+```
+
+From the diagram, the first thing we can tell is that in reality, most winning players are not high-kill players, as we can see a gradual decrease of the amount of total kills of each player.<br>
+We can see that 5.56mm ammo weapons are again favored by most winning players.<br>
+Many transactions among weapons happened between switching a non-ammo weapon to ammo weapon, or an assault rifle to sniper rifle.
+
+
+## Killer positiomn heatmap
+
+Now we move on to analyze the popular places where most fights take place. To do that we will create a heatmap of the killer position of each game using a 2D density plot.
+
+```{r}
 data_scaled = kill_1_erang %>% 
   select(c(killer_position_x, killer_position_y)) %>%
   drop_na(killer_position_x) %>% drop_na(killer_position_y)
 ```
 
-```{r}
-img <- readJPEG("erangel.jpg")
+```{r, fig.width=6, fig.height=6}
+img = readJPEG("erangel.jpg")
+
 ggplot(data_scaled, aes(x=killer_position_x, y=killer_position_y)) +
   annotation_custom(rasterGrob(img, width=unit(1,"npc"), 
-                height=unit(1,"npc"), interpolate = FALSE)
-                , -Inf, Inf, -Inf, Inf) +
-  geom_bin2d(alpha = 0.9, bins=100) +
-  scale_x_continuous(expand=c(0,0))+
-  scale_y_continuous(expand=c(0,0))+
+                               height=unit(1,"npc"), interpolate = FALSE), 
+                    -Inf, Inf, -Inf, Inf) +
+  stat_density_2d(aes(fill=..density.., alpha=(..density..)^0.3), 
+                  geom = "raster", contour = FALSE) +
+  scale_alpha(range=c(0,1)) +
+  scale_fill_continuous(low='#700000', high='#700000') +
+  scale_x_continuous(expand=c(0,0)) +
+  scale_y_reverse(expand=c(0,0)) +
   theme(axis.title=element_blank(),
         legend.position = "none")
 ```
 
+From the heat map we can clearly see that the most popular locations for fights are Pochinki, Mylta, Sosnovka Military Base and their surrounding areas.<br>
+A good advice for beginner is to avoid these areas and choose places that were less popular in fighting.
+
+
+## K/D analysis
+
+Moving forward, we will analyze the performance of players.<br>
+For that, I will introduce a concept called K/D, which is short for Kill-Death ratio. K/D is the total amount of people a player killed divided by the total amount of times a player got killed.<br>
+Typically, the higher the K/D is, the better the player is at the game.
+
 ```{r}
-#TODO: kill by method
+agg_1_erang = agg_stat %>%
+  filter(match_id %in% kill_1_erang$match_id) %>%
+  mutate(lose = ifelse(team_placement==1, 0, 1))
+
+pivot_deaths = agg_1_erang %>%
+  group_by(player_name) %>%
+  mutate(death_counts = sum(lose))  %>%
+  select(c(player_name, death_counts)) %>%
+  filter(row_number()==1)
+
+pivot_kills = agg_1_erang %>%
+  group_by(player_name) %>%
+  mutate(kill_counts = sum(player_kills))  %>%
+  select(c(player_name, kill_counts)) %>%
+  filter(row_number()==1)
+
+pivot_kills = pivot_kills %>% 
+  inner_join(pivot_deaths, by='player_name') %>%
+  mutate(k_d = kill_counts/death_counts) %>%
+  filter(k_d <= 10)
 ```
 
 ```{r}
-#TODO: kill by method by different time frame
+ggplot(pivot_kills, aes(x = k_d)) +
+  geom_histogram(fill = "white", colour = "black", bins=30, boundary=0) +
+  ggtitle('Histogram of Kill-Death ratio') +
+  theme(plot.title=element_text(size=10))
 ```
 
+From the histogram of K/D value, we can see that the distribution of K/Ds is extremely skewed to the right.<br>
+To gain more insight, we split the data set based on high-low K/D values.
+
 ```{r}
-#TODO: k/d analysis
+pivot_high = pivot_kills %>% filter(k_d > 3.0)
+pivot_low = pivot_kills %>% filter(k_d <= 3.0)
+
+r = ggplot(pivot_high, aes(x = k_d)) +
+  geom_histogram(fill = "white", colour = "black", bins=15, boundary=0) +
+  ggtitle('Histogram of Kill-Death ratio (K/D > 3.0)') +
+  theme(plot.title=element_text(size=10))
+
+l = ggplot(pivot_low, aes(x = k_d)) +
+  geom_histogram(fill = "white", colour = "black", bins=15) +
+  ggtitle('Histogram of Kill-Death ratio (K/D <= 3.0)') +
+  theme(plot.title=element_text(size=10))
+
+l + r
 ```
+
+I split the data set based on low K/D value (K/D <= 3.0) and high K/D value (if K/D > 3.0).<br>
+From the graph, we can see that in reality, most of the K/Ds ranged from 0.5 to 1.5.<br>
+In reality, is extremely rare to kill more that 3 people per death on average.
+
+
+## Individual analysis
+
+Now we will look at the individual behavior good vs bad player.<br>
+For this, I shrunk the dataset to players whose total death counts range from 31 to 35 and have killed at least 30 people in total.<br>
+We will look into 3 players with the highest K/D and 3 players with the lowest K/D, and their approximate path travelled in each game.<br><br>
+Note:<br>
+For each path, circle dots denote kill position of that player at each game, the triangle indicates the end point of this player, either they were killed or won the game at the spot.
+
+```{r}
+sub_group = pivot_kills %>% 
+  filter(death_counts > 30 & death_counts >= 35 & kill_counts >= 30) %>%
+  arrange(k_d, death_counts)
+
+top3 = tail(sub_group$player_name, n=3)
+low3 = head(sub_group$player_name, n=3)
+```
+
+
+### Top player analysis
+
+```{r}
+apprx_path = function(df, img, name, top=TRUE) {
+  type = 'top'
+  if (!top) {
+    type = 'lower'
+  }
+  player = df %>% filter((killer_name == name & killer_position_x > 0) |
+                           (victim_name == name & victim_position_x > 0))
+  ids = unique(player$match_id)
+  n = length(ids)
+  cols = rainbow(n, s=1, v=1, start=0, end=(n-1)/n, alpha=1)
+  
+  plot = ggplot() + annotation_custom(rasterGrob(img, width=unit(1,"npc"), 
+                                                 height=unit(1,"npc"), interpolate = FALSE), 
+                                      -Inf, Inf, -Inf, Inf) +
+    coord_cartesian(xlim = c(0, 4096), ylim=c(0, 4096))
+  
+  for (i in 1:n) {
+    group = player %>%
+      filter(match_id == ids[i])
+    x_last = tail(group$killer_position_x, n=1)
+    y_last = tail(group$killer_position_y, n=1)
+    if (tail(group$victim_name, n=1) == name) {
+      x_last = tail(group$victim_position_x, n=1)
+      y_last = tail(group$victim_position_y, n=1)
+      group = group %>% select(c(killer_position_x, killer_position_y))
+      group[nrow(group),] = c(x_last, y_last)
+    }
+    x = group$killer_position_x
+    y = group$killer_position_y
+    if (length(x) > 1) {
+      for (j in 1:(length(x)-1)) {
+        plot = plot + 
+          geom_line(aes_string(x=c(x[j], x[j+1]), y=c(y[j], y[j+1])), 
+                    color = cols[i], size = 0.7, alpha=0.7)
+      }
+      plot = plot + geom_point(aes_string(x = x[1:length(x)-1], y = y[1:length(x)-1]), 
+                               shape=16, color = cols[i], size=1, alpha=0.7)
+    }
+    plot = plot + geom_point(aes_string(x=x_last, y=y_last), shape=17, color = cols[i], size=2, alpha=0.7)
+  }
+  plot = plot + 
+    ggtitle(paste('Approximate path of', type, 'player', name, 'in each game', sep = ' ')) +
+    theme(axis.title=element_blank(),
+          legend.position = "none",
+          plot.title=element_text(size=10))
+  print(plot)
+}
+```
+
+```{r, fig.width=7, fig.height=7}
+apprx_path(kill_1_erang, img, top3[1])
+apprx_path(kill_1_erang, img, top3[2])
+apprx_path(kill_1_erang, img, top3[3])
+```
+
+➔ Some interesting behavior of the first top player KenTBK include that they have a few preferred drop spots, including Pochinki area south-west part of Erangel and eastern Erangel. They don't travel a lot, but are usually able to maintain a high kill within the spot that they are staying.<br>
+➔ On the other hand, the second top player Azarath_Zinthos is much more of a heavy fighter, they usually only drop at Pochinki and are about to make their way out most of the times. They also travel much more than the previous player.<br>
+➔ The third top player HuYa_Suancai also like to drop at Pochinki area, but they also sometime will drop at upper west Erangel or other locations. They also travel a lot within each game, and is the only player among all three who travel through water as well.<br><br>
+In general, it seems like all of these top players have their preferred drop spot, and where able to move their way out with very high kills.
+
+
+### Lower player analysis
+
+```{r, fig.width=7, fig.height=7}
+apprx_path(kill_1_erang, img, low3[1], FALSE)
+apprx_path(kill_1_erang, img, low3[2], FALSE)
+apprx_path(kill_1_erang, img, low3[3], FALSE)
+```
+
+The behavior of all of the three bottom players have one thing in common: they don't have a preferred drop spot. They will land at random places and will be killed shortly after.<br><br>
+One good advice to give for beginner is that always have a preferred drop spot so that you are familiar with the set up of the spot, either a place with heavy fighting or not, from there you can gradually expand your location.
+
+
+## Kill ratio vs. Ranking
+
+Finally, we will analyze whether it is better to fight or hide to gain a better placement in the game.<br>
+To do that, we will introduce a new variable called the kill ratio.<br>
+Kill ratio is measured by the amount of people that a player killed for each game divided by the sum of player distance ride and player distance killed.<br>
+Since the bigger amount of player killed indicates heavier level of fighting and more distance of traveling means higher possibility of hiding, the bigger the kill ratio, the more fighting and less hiding of the player.
+
+```{r}
+kr = agg_1_erang %>% 
+  mutate(ratio = player_kills/(player_dist_ride + player_dist_walk)) %>%
+  filter(ratio < 3)
+
+ggplot(kr,aes(x=ratio,y=team_placement)) + 
+  geom_point(size=1, alpha = 0.3, color='blue')+
+  xlab('Kill ratio') + 
+  ylab('Team placement') + 
+  ggtitle("Scatter plot of team placement vs kill ratio")
+```
+
+ From the graph of team placement vs kill ratio, it is clear that the there is a positive correlation between higher kill ratio and lower team placement.<br>
+ Therefore, combined with the behavior analysis of top vs low K/D players, for regular users, to get a better rank, it is wiser to HIDE than FIGHT.
