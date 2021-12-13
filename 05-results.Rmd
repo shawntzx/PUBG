@@ -4,13 +4,17 @@
 library(jpeg)
 library(grid)
 library(ggalluvial)
+library(ggplot2)
+library(forcats)
 ```
 
 ```{r}
 kill_1_erang = kill_stat %>%
   filter(match_id %in% agg_stat$match_id) %>%
   arrange(match_id, time)
+```
 
+```{r}
 kill_1_erang = kill_1_erang %>%
   filter(killer_position_x >= 0 & killer_position_x <= 800000 & 
            killer_position_y >= 0 & killer_position_y <= 800000 &

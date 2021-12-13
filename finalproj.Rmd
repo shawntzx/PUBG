@@ -1,0 +1,263 @@
+--- 
+title: "PUBG"
+author: "Zixiang Tang & Yuwen Zhang"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+---
+```{r include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+
+# Introduction
+
+
+<!--chapter:end:index.Rmd-->
+
+```{r include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+# Data sources
+
+
+<!--chapter:end:02-data.Rmd-->
+
+```{r include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+# Data transformation
+
+<!--chapter:end:03-cleaning.Rmd-->
+
+```{r include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+# Missing values
+
+```{r}
+library(tidyverse)
+library(patchwork)
+```
+
+```{r}
+plot_missing <- function(df, percent=FALSE) {
+  missing_patterns = data.frame(is.na(df)) %>%
+  group_by_all() %>%
+  count(name = "count", sort = TRUE) %>%
+  ungroup()
+  
+  c = ncol(missing_patterns)
+  r = nrow(missing_patterns)+1
+  
+  if(percent) {
+    missing_patterns <- missing_patterns %>%
+      mutate(count = count/(sum(count))*100)
+  }
+  
+  tidydf = missing_patterns %>% 
+    select(!c('count'))%>% 
+    rownames_to_column("id") %>% 
+    gather(key, value, -id) %>% 
+    mutate(missing = ifelse(value == TRUE, TRUE, FALSE)) %>%
+    group_by(id) %>%
+    mutate(complete = ifelse(all(missing == FALSE), TRUE, FALSE))
+  
+  missing_patterns <- missing_patterns %>%
+    mutate(complete = ifelse(rowSums(across(!c(count))) > 0, FALSE, TRUE))
+  
+  complete_ind = as.numeric(rownames(missing_patterns))[missing_patterns$complete == TRUE]
+  
+  count = colSums(is.na(df)) %>% sort(decreasing = TRUE)
+  missing_cols = as.data.frame(count)
+  missing_cols = rownames_to_column(missing_cols, "ID")
+  missing_cols$ID = factor(missing_cols$ID, levels = missing_cols$ID)
+  
+  if(percent) {
+    missing_cols <- missing_cols %>%
+      mutate(count = count/(sum(count))*100)
+  }
+  
+  missing_patterns = rownames_to_column(missing_patterns, "ID")
+  missing_patterns$ID = factor(missing_patterns$ID, levels = missing_patterns$ID)
+  
+  tidydf$key = factor(tidydf$key, levels = missing_cols$ID)
+  tidydf$id = factor(tidydf$id, levels = missing_patterns$ID)
+
+  m = ggplot(tidydf, aes(x = fct_relevel(key, row.names(missing_cols)), 
+                         y = fct_rev(id), fill = missing, alpha = complete)) +
+      geom_tile(color = "white") + 
+      xlab("variable") + 
+      ylab("missing pattern") +
+      theme_classic() +
+      scale_fill_manual(values = c('#878787', "#7a52aa")) +
+      scale_alpha_manual(values = c(0.65, 1)) +
+      theme(legend.position = "none") +
+      annotate(geom="text", x=c/2, y=r-complete_ind, label="complete cases", color="#222222")
+  
+  r = ggplot(missing_patterns, aes(y=fct_rev(ID), x=count, alpha=complete)) + 
+      geom_bar(stat = "identity", fill='#73a5c6') +
+      theme_bw()+
+      scale_alpha_manual(values = c(0.65, 1)) +
+      theme(axis.title.y = element_blank(),
+            legend.position = "none",
+            panel.grid.minor.y=element_blank(),
+            panel.grid.major.y=element_blank())
+  
+  if (!percent) {
+    r = r + scale_x_continuous(expand=c(0,0), breaks=scales::pretty_breaks(3)) +
+      xlab('rows count')
+  } else {
+    r = r + scale_x_continuous(breaks=c(0, 25, 50, 75, 100), expand=c(0,0), limits=c(0, 100)) +
+      xlab('% rows')
+  }
+  
+  u = ggplot(missing_cols, aes(x=ID, y=count)) + 
+      geom_bar(stat = "identity", fill='#73a5c6', alpha = 0.65) +
+      theme_bw()+
+      theme(axis.title.x = element_blank(),
+            legend.position = "none",
+            panel.grid.minor.x=element_blank(),
+            panel.grid.major.x=element_blank()) 
+  
+  if (!percent) {
+    u = u + scale_y_continuous(expand=c(0,0), breaks=scales::pretty_breaks(3)) +
+      ylab('num rows\nmissing')
+  } else {
+    u = u + scale_y_continuous(breaks=c(0, 25, 50, 75, 100), expand=c(0,0), limits=c(0, 100)) +
+      ylab('% rows\nmissing')
+  }
+  
+  layout = "
+    AAA#
+    BBBC
+    BBBC
+    BBBC
+    "
+  u+m+r+
+    plot_layout(design = layout) + 
+    plot_annotation(title = 'Missing value patterns')
+}
+```
+
+<br><br>
+
+The data set that we are working on contains two kinds of data, kill data and match data, each consists of four subsets of around 2GB on a singular subset.
+For this analysis we only used the last dataset of the kill and match data.
+
+```{r}
+kill = read_csv('kill_match_stats_final_4.csv')
+knitr::kable(head(kill))
+```
+
+First we take a look at the kill data set, which tracks the kill information of each game.<br>
+The data set contains the following variable:<br>
+`kill_by`: method/weapon of killing<br>
+`killer_name`: player name of the killer<br>
+`killer_placement`: killer final ranking of the game<br>
+`killer_position_x`: killer x-coordinate on the map, ranging from 0 to 800000<br>
+`killer_position_y`: killer y-coordinate on the map, ranging from 0 to 800000<br>
+`map`: map of the game, there are currently four maps in PUBG, which are Erangel, Miramar, Sanhok, and Vikendi<br>
+`match_id`: unique identification of the game, which can be mapped to the match dataset<br>
+`time`: death time, measured by seconds<br>
+`victim_name`: player name of the victim<br>
+`victim_placement`: victim final ranking of the game<br>
+`victim_position_x`: victim x-coordinate on the map, ranging from 0 to 800000<br>
+`victim_position_y`: victim y-coordinate on the map, ranging from 0 to 800000
+
+<br><br>
+
+```{r, fig.width=16, fig.height=9}
+plot_missing(kill)
+plot_missing(kill, TRUE)
+```
+
+From the missing pattern graph we can see that most of the data in the data set is complete, consisting of over 10 million/almost 90% of data. The next significant missingness is of the killer information, which makes sense because in PUBG player can be killed not only by other players but also other reasons such as bleeding out due to bluezone, in which case there will not be a killer.<br>
+There is also missing values on `victim_placement` and `map`, which I would deem as wrong values because these information should be present in the data under any circumstance. In this case, I would consider dropping these values.
+
+<br><br>
+
+```{r}
+match = read_csv('agg_match_stats_4.csv')
+knitr::kable(head(match))
+```
+
+Then we analyze the aggregated match data set, which tracks the meta data of each game<br>
+The data set contains the following variable:<br>
+`date`: date of the game<br>
+`game_size`: total amount of players in that game<br>
+`match_id`: unique identification of the game, which can be mapped to the kill data set<br>
+`match_mode`: the perspective of the game, there are two kinds of perspective in PUBG, tpp (third-person-perspective) and fpp (first-person-perspective)<br>
+`party_size`: amount of players in each group, there are three modes in party size, single (1 player/team), duo (up to 2 players/team), and squad (up to 4 players/team)<br>
+`player_assists`: player assists in each game, assist means causing damage but not death to the other players<br>
+`player_dbno`: play down but not out in each game, down but not out means down but got revived by teammate (only applicable in non-single mode)<br>
+`player_dist_ride`: distance that player traveled through vehicles<br>
+`player_dist_walk`: distance that player traveled by walking<br>
+`player_dmg`: total player damage caused on other players<br>
+`player_kills`: total people killed by that player<br>
+`player_name`: -<br>
+`player_survive_time`: total time passed before player dies/wins<br>
+`team_id`: -<br>
+`team_placement`: ranking of that team in that game
+
+<br><br>
+
+```{r, fig.width=16, fig.height=9}
+plot_missing(match)
+plot_missing(match, TRUE)
+```
+
+From the missing pattern graph we can see that nearly all data in this set in complete, which makes sense because it's an aggregated match data that must have already had some human modification to ensure completeness. Almost there are very few amount of missingness in `player_name`, but is mostly dismissable.
+
+<!--chapter:end:04-missing.Rmd-->
+
+```{r include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+# Results
+
+<!--chapter:end:05-results.Rmd-->
+
+```{r include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+# Interactive component
+
+
+
+<!--chapter:end:06-interactive.Rmd-->
+
+```{r include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+# Conclusion
+
+
+<!--chapter:end:07-conclusion.Rmd-->
+
